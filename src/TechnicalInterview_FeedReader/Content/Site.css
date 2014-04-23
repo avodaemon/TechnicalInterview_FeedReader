@@ -434,6 +434,11 @@ input, textarea {
     width: 300px;
 }
 
+.input-disabled {
+    background: #EBEBE4;
+    border: 1px solid #ABADB3;
+}
+
 textarea {
     font-family: inherit;
     width: 500px;
@@ -578,7 +583,7 @@ th {
     }
 
 td {
-    padding: 0.25em 2em 0.25em 0em;
+    padding: 0.25em 0.25em 0.25em 0em;
     border: 0 none;
 }
 

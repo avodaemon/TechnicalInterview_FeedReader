@@ -1,0 +1,118 @@
+﻿@model TechnicalInterview_FeedReader.Models.NewsFeed
+
+@{
+    ViewBag.Title = "Subscribe";
+}
+
+<h2>Subscribe to a New Feed</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>New Feed</legend>
+
+        @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.Color)
+        @Html.HiddenFor(model => model.ImageUrl)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Url)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Url)
+            @Html.ValidationMessageFor(model => model.Url)
+        </div>
+
+        <input type="button" value="Verify Feed" id="btnVerifyFeed" onclick="verifyFeed()" />
+
+        <div id="extendedForm" style="display:none">
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Title)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Title)
+            @Html.ValidationMessageFor(model => model.Title)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Description)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Description)
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+
+        <div class="editor-field">
+            <img src="" id="feedImage" style="max-width:128px; max-height:128px; border:1px solid black"/>
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Color)
+        </div>
+        <div class="editor-field">
+            <div id="ColorPicker"></div>
+            @Html.ValidationMessageFor(model => model.Color)
+        </div>
+
+        <p>
+            <input type="submit" value="Subscribe" />
+        </p>
+
+        </div>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ColorPicker").colorpicker();
+        $("#ColorPicker").colorpicker("val",
+            "@Html.ValueFor(model => model.Color)");
+        $("#ColorPicker").on("change.color", function (event, color) {
+            $("#@Html.IdFor(model => model.Color)").val(color);
+        })
+    });
+
+    function verifyFeed() {
+        var json = { "Url": $("#@Html.IdFor(model => model.Url)").val() };
+        $.ajax({
+            type: "POST",
+            url: "/NewsFeeds/VerifyFeed",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(json),
+            dataType: "json",
+            success: verifyCompleted,
+            error: verifyFailed
+        });
+    }
+
+    function verifyCompleted(d) {
+        $("#@Html.IdFor(model => model.Url)").attr("readonly", true);
+        $("#@Html.IdFor(model => model.Url)").addClass("input-disabled");
+        $("#@Html.IdFor(model => model.Title)").val(d.Title);
+        $("#@Html.IdFor(model => model.Description)").val(d.Description);
+        $("#@Html.IdFor(model => model.ImageUrl)").val(d.ImageUrl);
+        if (d.ImageUrl != "") {
+            $("#feedImage").attr("src", d.ImageUrl);
+        } else {
+            $("#feedImage").css("display", "none");
+        }
+        $("#btnVerifyFeed").css("display", "none");
+        $("#extendedForm").css("display", "block");
+    }
+
+    function verifyFailed(request, status, error) {
+        alert("Invalid Feed URL");
+    }
+</script>
+}

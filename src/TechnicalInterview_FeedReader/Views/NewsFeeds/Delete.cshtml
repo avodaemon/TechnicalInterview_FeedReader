@@ -1,0 +1,33 @@
+﻿@model TechnicalInterview_FeedReader.Models.NewsFeed
+
+@{
+    ViewBag.Title = "Unsubscribe";
+}
+
+<h2>Unsubscribe from Feed</h2>
+
+<h3>Are you sure you want to unsubscribe from this feed?</h3>
+
+<table style="border: 1px solid black; width:100%">
+    <tr>
+        <td width="10px" style="min-width:10px;background-color:@Html.DisplayFor(model => model.Color)">
+            &nbsp;
+        </td>
+        <td style="padding-left:5px">
+            <h3>@Html.DisplayFor(model => model.Title)</h3>
+            <p>@Html.DisplayFor(model => model.Description)</p>
+            <p>@Html.DisplayFor(model => model.Url)</p>
+        </td>
+        <td>
+            <img src="@Html.DisplayFor(model => model.ImageUrl)" style="max-width:128px; max-height:128px;">
+        </td>
+    </tr>
+</table>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Unsubscribe" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

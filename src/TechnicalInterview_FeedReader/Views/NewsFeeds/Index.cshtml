@@ -1,0 +1,32 @@
+﻿@model IEnumerable<TechnicalInterview_FeedReader.Models.NewsFeed>
+
+@{
+    ViewBag.Title = "My Feeds";
+}
+
+<h2>Manage My Feeds</h2>
+
+<p>
+    @Html.ActionLink("Subscribe to New Feed", "Create")
+</p>
+@foreach (var item in Model)
+{
+    <table style="border: 1px solid black; width:100%">
+        <tr>
+            <td width="10px" style="min-width:10px;background-color:@Html.DisplayFor(modelItem => item.Color)">
+                &nbsp;
+            </td>
+            <td style="padding-left:5px">
+                <h3>@Html.DisplayFor(modelItem => item.Title)</h3>
+                <p>@Html.DisplayFor(modelItem => item.Description)</p>
+            </td>
+            <td>
+                <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" style="max-width:64px; max-height:64px;">
+            </td>
+            <td width="100px" style="white-space:nowrap">
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Unsubscribe", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    </table>
+}
